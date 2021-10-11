@@ -69,3 +69,5 @@ When a branch has been Merged and Squashed with the main branch, the branches wi
 Robert Goddard was an American physicist who sent the first liquid-fueled rocket aloft in Auburn, Massachusetts, on March 16, 1926. He had two U.S. patents for using a liquid-fueled rocket and also for a two- or three-stage rocket using solid fuel, according to NASA. 
 
 In case you haven't guessed, the strategies have space-themed names 🚀
+
+Do not merge this PR, it is a GH repo permissions test only!
