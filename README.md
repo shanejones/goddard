@@ -56,7 +56,7 @@ dev/Apollo11-add-csl-level
 fix/Saturn5-fixing-logic
 ```
 
-Prefix new branches with `dev` and any bugfixes with `fix`. Github has branch based regex enabled to ensure this formatting is followed.
+Prefix new branches with `dev` and any bugfixes with `fix`. 
 
 Please ensure your commit messages give details on any significant changes
 
