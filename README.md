@@ -24,7 +24,7 @@ Buy Signals can be seen and experimented with over on TradingView.
 
 Head to this link https://www.tradingview.com/script/uXtX0WCT-Goddard/ and then scroll down and Add to your Favourite indicators. You can then add this to any chart. Using the settings for the strategy (Hover over the name on the chart, click the settings cog), you can adjust the values used to make those buy decisions.
 
-If you find a better selection of values that result in better buy signals, be sure to.
+If you find a better selection of values that result in better buy signals, be sure to submit these using the issues tracker within GitHub and we'll test and apply to the main repo after backtesting.
 
 You'll notice these strategies are not fast. Their intention is to hold out for profit. If you want a bot that trades hundreds of times per day, this is not for you. Is it profit you want or more trades?
 
