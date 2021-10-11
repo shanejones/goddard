@@ -16,15 +16,17 @@
 
 
 
-#Strategies
+# Strategies
 
 Goddard is made up of 2 simple strategies that can be run on any time frame you want. The buy signals for both strategies are the same. They only differ in the way they sell.
 
-You'll notice these strategies are not fast. Their intention is to hold out for profit. If you want a bot that trades hundreds of times per day, this is not for you. Is it profit you want or more trades?
+Buy Signals can be seen and experimented with over on TradingView. 
 
-Buy Signals can be seen and experimented with over on TradingView. Head to this link https://www.tradingview.com/script/uXtX0WCT-Goddard/ and then scroll down and Add to your Favourite indicators. You can then add this to any chart. Using the settings for the strategy (Hover over the name on the chart, click the settings cog), you can adjust the values used to make those buy decisions.
+Head to this link https://www.tradingview.com/script/uXtX0WCT-Goddard/ and then scroll down and Add to your Favourite indicators. You can then add this to any chart. Using the settings for the strategy (Hover over the name on the chart, click the settings cog), you can adjust the values used to make those buy decisions.
 
 If you find a better selection of values that result in better buy signals, be sure to.
+
+You'll notice these strategies are not fast. Their intention is to hold out for profit. If you want a bot that trades hundreds of times per day, this is not for you. Is it profit you want or more trades?
 
 These strategies work fine with any number of trade slots. During development, most of us used five trade slots. These strategies also work with any number of trade slots. The most we live tested to was 25 trade slots with a coin list of 25. This ensures we don't miss any trades on any coins.
 
@@ -36,7 +38,7 @@ We have a 20% stop loss on this to allow for natural fluctuations at the start o
 
 The aim of this strategy is to make another trade as soon as a trade sells. In our tests, this strategy always had full slots.
 
-## Apollo
+## Apollo11
 This strategy is the same as Saturn5, except we remove the 5% fixed profit. 
 
 The sell signals here use a custom stop-loss function to help your trades travel as high as possible. This is done by using tiers, so the trailing stop loss changes as your profit rises too. In our tests, we found some trades to exceed 1000% in profit so we're pretty confident this works well.
@@ -49,7 +51,7 @@ All tests should be done using branches on Git.
 
 Development and test versions should all follow the same branch formatting. Some examples are below
 `dev/Saturn5-new-buy-signal` 
-`dev/Apollo-add-csl-level`
+`dev/Apollo11-add-csl-level`
 `fix/Saturn5-fixing-logic`
 
 Prefix new branches with `dev` and any bugfixes with `fix`
