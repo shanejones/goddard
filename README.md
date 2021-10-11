@@ -50,11 +50,13 @@ The sell signals here use a custom stop-loss function to help your trades travel
 All tests should be done using branches on Git. 
 
 Development and test versions should all follow the same branch formatting. Some examples are below
-`dev/Saturn5-new-buy-signal` 
-`dev/Apollo11-add-csl-level`
-`fix/Saturn5-fixing-logic`
+```
+dev/Saturn5-new-buy-signal
+dev/Apollo11-add-csl-level
+fix/Saturn5-fixing-logic
+```
 
-Prefix new branches with `dev` and any bugfixes with `fix`
+Prefix new branches with `dev` and any bugfixes with `fix`. Github has branch based regex enabled to ensure this formatting is followed.
 
 Please ensure your commit messages give details on any significant changes
 
