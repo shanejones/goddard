@@ -1,4 +1,5 @@
 // Replace the sections below in your main config
+// Caveat: This has only been tested with BUSD on Binance so far
 
 {
   "pair_whitelist": [
