@@ -1,5 +1,5 @@
 // We have compiled a list of coins that we feel should be generall blacklisted
-// Reaplace the section below in your main config
+// Replace the section below in your main config
 
 {
   "pair_blacklist": [
