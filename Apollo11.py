@@ -1,5 +1,6 @@
 from datetime import datetime
 from datetime import timedelta
+from functools import reduce
 
 import freqtrade.vendor.qtpylib.indicators as qtpylib
 import talib.abstract as ta
@@ -120,26 +121,25 @@ class Apollo11(IStrategy):
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # basic buy methods to keep the strategy simple
 
-        dataframe.loc[
-            (
-                (self.buy_signal_1 is True)
-                & (dataframe["close"] < dataframe["s1_ema_xxl"])
-                & (qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]))
-                & (dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"])
-                & (dataframe["volume"] > 0)
-            ),
-            ["buy", "buy_tag"],
-        ] = (1, "buy_signal_1")
+        if self.buy_signal_1:
+            conditions = [
+                dataframe["close"] < dataframe["s1_ema_xxl"],
+                qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
+                dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_1")
 
-        dataframe.loc[
-            (
-                (self.buy_signal_2 is True)
-                & (qtpylib.crossed_above(dataframe["s2_fib_lower_band"], dataframe["s2_bb_lower_band"]))
-                & (dataframe["close"] < dataframe["s2_ema"])
-                & (dataframe["volume"] > 0)
-            ),
-            ["buy", "buy_tag"],
-        ] = (1, "buy_signal_2")
+        if self.buy_signal_2:
+            conditions = [
+                qtpylib.crossed_above(dataframe["s2_fib_lower_band"], dataframe["s2_bb_lower_band"]),
+                dataframe["close"] < dataframe["s2_ema"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
+
+        if not self.buy_signal_1 and not self.buy_signal_2:
+            dataframe.loc[(), "buy"] = 0
 
         return dataframe
 
