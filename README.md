@@ -5,7 +5,7 @@
 
 
 > ⚠️ General Crypto Warning
-> 
+>
 > Crypto and crypto markets are very volatile. By using these strategies, you do so at your own risk. We are not to be held accountable for any losses caused. We're not even to be held responsible for any wins you make either.
 >
 >The results you get will not always be the same as someone else because many factors cause differences in everyone's setups. Server location, server performance, coin lists, config and filter differences, market conditions all play into this.
@@ -20,7 +20,7 @@
 
 Goddard is made up of 2 simple strategies that can be run on any time frame you want. The buy signals for both strategies are the same. They only differ in the way they sell.
 
-Buy Signals can be seen and experimented with over on TradingView. 
+Buy Signals can be seen and experimented with over on TradingView.
 
 Head to this link https://www.tradingview.com/script/uXtX0WCT-Goddard/ and then scroll down and Add to your Favourite indicators. You can then add this to any chart. Using the settings for the strategy (Hover over the name on the chart, click the settings cog), you can adjust the values used to make those buy decisions.
 
@@ -39,7 +39,7 @@ We have a 20% stop loss on this to allow for natural fluctuations at the start o
 The aim of this strategy is to make another trade as soon as a trade sells. In our tests, this strategy always had full slots.
 
 ## Apollo11
-This strategy is the same as Saturn5, except we remove the 5% fixed profit. 
+This strategy is the same as Saturn5, except we remove the 5% fixed profit.
 
 The sell signals here use a custom stop-loss function to help your trades travel as high as possible. This is done by using tiers, so the trailing stop loss changes as your profit rises too. In our tests, we found some trades to exceed 1000% in profit so we're pretty confident this works well.
 
@@ -47,7 +47,7 @@ The sell signals here use a custom stop-loss function to help your trades travel
 
 # For developers
 
-All tests should be done using branches on Git. 
+All tests should be done using branches on Git.
 
 Development and test versions should all follow the same branch formatting. Some examples are below
 ```
@@ -56,16 +56,25 @@ dev/Apollo11-add-csl-level
 fix/Saturn5-fixing-logic
 ```
 
-Prefix new functionality with `dev` and any bugfixes with `fix`. 
+Prefix new functionality with `dev` and any bugfixes with `fix`.
 
 Please ensure your commit messages give details on any significant changes
 
 When a branch has been Merged and Squashed with the main branch, the branches will be deleted. If your branch test is unsuccessful in your tests, delete it when you are done. We should try to keep the number of branches minimal if possible.
 
+## Pre-Commit
+
+Code style guidelines and static lint checking is enforced by [pre-commit](https://pre-commit.com).
+After cloning the repository, be sure to run the following:
+
+```
+pip install pre-commit
+pre-commit install --install-hooks
+```
 
 
 # Why Goddard
 
-Robert Goddard was an American physicist who sent the first liquid-fueled rocket aloft in Auburn, Massachusetts, on March 16, 1926. He had two U.S. patents for using a liquid-fueled rocket and also for a two- or three-stage rocket using solid fuel, according to NASA. 
+Robert Goddard was an American physicist who sent the first liquid-fueled rocket aloft in Auburn, Massachusetts, on March 16, 1926. He had two U.S. patents for using a liquid-fueled rocket and also for a two- or three-stage rocket using solid fuel, according to NASA.
 
 In case you haven't guessed, the strategies have space-themed names 🚀
