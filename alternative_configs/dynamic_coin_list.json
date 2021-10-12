@@ -1,0 +1,48 @@
+// Replace the sections below in your main config
+// Caveat: This has only been tested with BUSD on Binance so far
+
+{
+  "pair_whitelist": [
+    // As this will by dynamically generated, this section should now be empty
+  ],
+  "pairlists":[
+    {
+      "method":"VolumePairList",
+      "number_assets": 100,
+      "sort_key": "quoteVolume",
+      "refresh_period": 1800,
+      "min_value": 3000000
+    },
+    {
+      "method": "AgeFilter",
+      "min_days_listed": 14
+    },
+    {
+      "method":"SpreadFilter",
+      "max_spread_ratio": 0.005
+    },
+    {
+      "method": "PriceFilter",
+      "low_price_ratio": 0.10,
+      "min_price": 0.001
+    },
+    {
+      "method":"RangeStabilityFilter",
+      "lookback_days": 3,
+      "min_rate_of_change": 0.01,
+      "refresh_period": 1440
+    },
+    {
+      "method":"VolatilityFilter",
+      "lookback_days": 4,
+      "min_volatility": 0.02,
+      "max_volatility": 0.75,
+      "refresh_period": 86400
+    },
+    {
+      "method": "VolumePairList",
+      "number_assets": 80,
+      "sort_key": "quoteVolume"
+    }
+  ]
+}

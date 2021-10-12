@@ -1,0 +1,20 @@
+// We have compiled a list of coins that we feel should be generally blacklisted
+// Replace the section below in your main config
+
+{
+  "pair_blacklist": [
+    // Exchange (delete as appropriate based on your exchange)
+    "(BNB|KCS)/.*",
+    // Major
+    "(BTC|ETH)/.*",
+    // Leverage
+    ".*(_PREMIUM|BEAR|BULL|DOWN|HALF|HEDGE|UP|[1235][SL])/.*",
+    // Fiat
+    "(AUD|BRZ|CAD|CHF|EUR|GBP|HKD|IDRT|JPY|NGN|RUB|SGD|TRY|UAH|USD|ZAR)/.*",
+    // Stable
+    "(BUSD|CUSDT|DAI|PAX|PAXG|SUSD|TUSD|USDC|USDT|VAI)/.*",
+    // Fan coins and other pump and dumps
+    "(ACM|AFA|ALA|ALL|APL|ASR|ATM|BAR|CAI|CITY|FOR|GAL|GOZ|IBFK|JUV|LEG|LOCK-1|NAVI|NMR|NOV|OG|PFL|PSG|ROUSH|STV|TH|TRA|UCH|UFC|YBO)/.*",
+    "(CHZ|CTXC|HBAR|HORD|NMR|SHIB|SLP|XVS|ONG|ARDR)/.*",
+  ]
+}
