@@ -3,8 +3,8 @@
 
 {
   "pair_blacklist": [
-    // Exchange
-    "(BNB)/.*",
+    // Exchange (delete as appropriate based on your exchange)
+    "(BNB|KCS)/.*",
     // Major
     "(BTC|ETH)/.*",
     // Leverage
