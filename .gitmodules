@@ -1,0 +1,4 @@
+[submodule "user_data/data"]
+	path = user_data/data
+	url = https://github.com/shanejones/goddard-data.git
+	branch = main
