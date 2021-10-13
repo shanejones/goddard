@@ -55,7 +55,7 @@ class Apollo11(IStrategy):
             {
                 # Don't enter a trade right after selling a trade.
                 "method": "CooldownPeriod",
-                "stop_duration": to_minutes(hours=1, minutes=15),
+                "stop_duration": to_minutes(minutes=0),
             },
             {
                 # Stop trading if max-drawdown is reached.
