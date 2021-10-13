@@ -11,7 +11,7 @@ def to_minutes(**timdelta_kwargs):
     return int(timedelta(**timdelta_kwargs).total_seconds() / 60)
 
 
-class Saturn5b(IStrategy):
+class Saturn5(IStrategy):
     timeframe = "15m"
 
     # Stoploss
