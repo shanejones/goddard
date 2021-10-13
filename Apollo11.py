@@ -148,40 +148,41 @@ class Apollo11(IStrategy):
         dataframe.loc[(), "sell"] = 0
         return dataframe
 
-    def custom_stoploss(self, pair: str, trade: 'Trade', current_time: datetime,
-                        current_rate: float, current_profit: float, **kwargs) -> float:
-        
-        if current_profit > 0: # positive profit
-        
-            if (current_profit > 0.2):
+    def custom_stoploss(
+        self, pair: str, trade: Trade, current_time: datetime, current_rate: float, current_profit: float, **kwargs
+    ) -> float:
+
+        if current_profit > 0:  # positive profit
+
+            if current_profit > 0.2:
                 return 0.04
-            elif (current_profit > 0.1):
+            elif current_profit > 0.1:
                 return 0.03
-            elif (current_profit > 0.06):
+            elif current_profit > 0.06:
                 return 0.02
-            elif (current_profit > 0.03):
+            elif current_profit > 0.03:
                 return 0.01
             return 1
-            
-        else: # negative profit
-            
+
+        else:  # negative profit
+
             # Let's try to minimize the loss
             trade_time_30m = current_time - timedelta(minutes=30)
             trade_time_60h = current_time - timedelta(hours=60)
             trade_time_120h = current_time - timedelta(hours=120)
-            
-            if (trade_time_120h > trade.open_date_utc):
+
+            if trade_time_120h > trade.open_date_utc:
                 if current_profit <= -0.08:
                     return current_profit / 1.65
-            
-            elif (trade_time_60h > trade.open_date_utc):
+
+            elif trade_time_60h > trade.open_date_utc:
                 if current_profit <= -0.10:
                     return current_profit / 1.75
-                       
+
             # tank check
-            elif (trade_time_30m > trade.open_date_utc):
+            elif trade_time_30m > trade.open_date_utc:
                 if current_profit <= -0.06:
                     return -0.10
-                    
+
             # if no conditions are matched
             return -1
