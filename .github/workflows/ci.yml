@@ -190,6 +190,7 @@ jobs:
           tree downloaded-results
 
       - name: Comment CI Results
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
