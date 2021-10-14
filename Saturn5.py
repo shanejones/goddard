@@ -122,6 +122,7 @@ class Saturn5(IStrategy):
             dataframe["close"] < dataframe["s1_ema_xxl"],
             qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
             dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
+            dataframe["close"] < dataframe["s1_ema_xl"],
             dataframe["volume"] > 0,
         ]
         dataframe.loc[reduce(lambda x, y: x & y, s1_conditions), ["buy", "buy_tag"]] = (1, "buy_signal_1")
