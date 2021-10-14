@@ -44,10 +44,20 @@ This strategy is the same as Saturn5, except we remove the 5% fixed profit.
 The sell signals here use a custom stop-loss function to help your trades travel as high as possible. This is done by using tiers, so the trailing stop loss changes as your profit rises too. In our tests, we found some trades to exceed 1000% in profit so we're pretty confident this works well.
 
 
+## Falcon9
+This strategy uses new buy signals and should only be used using a DCA version of Freqtrade. Ideally you should use less coins than slots so that you can average down on any losing trades.
+
+The sell signals here are the same as Apollo11
+
+
 
 # For developers
 
 All tests should be done using branches on Git.
+
+If you edit the buy signal for Saturn5, make sure to reflect that on the Apollo11 buy signals and vice versa.
+
+If you edit the sell signals for Apollo11, make sure to reflect that on Falcon9's sell signals and vice versa
 
 ## Clone The Repository
 If you plan to only clone the repository to use the strategy, a regular ``git clone`` will do.
