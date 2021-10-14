@@ -151,38 +151,56 @@ class Apollo11(IStrategy):
     def custom_stoploss(
         self, pair: str, trade: Trade, current_time: datetime, current_rate: float, current_profit: float, **kwargs
     ) -> float:
-
-        if current_profit > 0:  # positive profit
+        if current_profit > 0:  # Positive profit
 
             if current_profit > 0.2:
                 return 0.04
-            elif current_profit > 0.1:
+            if current_profit > 0.1:
                 return 0.03
-            elif current_profit > 0.06:
+            if current_profit > 0.06:
                 return 0.02
-            elif current_profit > 0.03:
+            if current_profit > 0.03:
                 return 0.01
+            # Add lower stop loss steps based or previous lows since buy
+            lowest_profit = trade.calc_profit_ratio(trade.min_rate)
+            if lowest_profit < -0.07:
+                # Have we reached -7% before? If so, add another, smaller, TSL step
+                if current_profit > 0.025:
+                    return 0.0075
+            if lowest_profit < -0.10:
+                # Have we reached -10% before? If so, add another, smaller, TSL step
+                if current_profit > 0.015:
+                    return 0.0050
+            if lowest_profit < -0.15:
+                # Have we reached -15% before? If so, add another, smaller, TSL step
+                if current_profit > 0.05:
+                    # Last resort at some trailing
+                    return 0.0025
+                if current_profit > 0 and current_profit < 0.025:
+                    # SELL! SELL! SELL!
+                    return 0.00000001
+                return 1
+
+            # Positive profit logic ends here
             return 1
 
-        else:  # negative profit
+        # Negative profit, Let's try to minimize the loss
+        trade_time_30m = current_time - timedelta(minutes=30)
+        trade_time_60h = current_time - timedelta(hours=60)
+        trade_time_120h = current_time - timedelta(hours=120)
 
-            # Let's try to minimize the loss
-            trade_time_30m = current_time - timedelta(minutes=30)
-            trade_time_60h = current_time - timedelta(hours=60)
-            trade_time_120h = current_time - timedelta(hours=120)
+        if trade_time_120h > trade.open_date_utc:
+            if current_profit <= -0.08:
+                return current_profit / 1.65
 
-            if trade_time_120h > trade.open_date_utc:
-                if current_profit <= -0.08:
-                    return current_profit / 1.65
+        elif trade_time_60h > trade.open_date_utc:
+            if current_profit <= -0.10:
+                return current_profit / 1.75
 
-            elif trade_time_60h > trade.open_date_utc:
-                if current_profit <= -0.10:
-                    return current_profit / 1.75
+        # tank check
+        elif trade_time_30m > trade.open_date_utc:
+            if current_profit <= -0.06:
+                return -0.10
 
-            # tank check
-            elif trade_time_30m > trade.open_date_utc:
-                if current_profit <= -0.06:
-                    return -0.10
-
-            # if no conditions are matched
-            return -1
+        # If no conditions are matched, leave it at last value
+        return 1
