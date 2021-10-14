@@ -6,7 +6,6 @@
   "fiat_display_currency": "GBP",
   "dry_run": false,
   "cancel_open_orders_on_exit": false,
-
   "order_types": {
       "buy": "market",
       "sell": "market",
@@ -14,10 +13,14 @@
       "stoploss": "market",
       "stoploss_on_exchange": false
   },
-
   "bid_strategy": {
       "price_side": "ask",
       "ask_last_balance": 0.0
+  },
+  "unfilledtimeout": {
+    "unit": "seconds",
+    "buy": 30,
+    "sell": 10
   },
   "ask_strategy": {
       "price_side": "bid"
