@@ -273,7 +273,7 @@ method-naming-style=snake_case
 #method-rgx=
 
 # Naming style matching correct module names.
-module-naming-style=PascalCase
+module-naming-style=snake_case
 
 # Regular expression matching correct module names. Overrides module-naming-
 # style.

@@ -54,6 +54,7 @@ repos:
     rev: '4.0.1'
     hooks:
       - id: flake8
+        exclude: ^.github/workflows/.*$
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.910
@@ -63,4 +64,5 @@ repos:
         args: []
         additional_dependencies:
           - pandas-stubs
+          - types-attrs
   # <---- Formatting -------------------------------------------------------------------------------------------------

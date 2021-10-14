@@ -49,6 +49,31 @@ The sell signals here use a custom stop-loss function to help your trades travel
 
 All tests should be done using branches on Git.
 
+## Clone The Repository
+If you plan to only clone the repository to use the strategy, a regular ``git clone`` will do.
+
+However, if you plan on running additional strategies or run the test suite, you need to clone
+the repository and it's submodules.
+
+### Newer versions of Git
+
+```bash
+git clone --recurse-submodules git@github.com:shanejones/goddard.git checkout-path
+```
+
+### Older versions of Git
+
+```bash
+git clone --recursive git@github.com:shanejones/goddard.git checkout-path
+```
+
+### Existing Checkouts
+```
+git submodule update --remote --checkout
+```
+
+## Workflow
+
 Development and test versions should all follow the same branch formatting. Some examples are below
 ```
 dev/Saturn5-new-buy-signal
