@@ -1,0 +1,9 @@
+[flake8]
+#ignore =
+max-line-length = 120
+max-complexity = 12
+exclude =
+    .git,
+    __pycache__,
+    .eggs,
+    user_data,

@@ -16,65 +16,14 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y lsb-release
-
     - name: Set PY Cache Key
       run: echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
-
-    - name: Set TA-Lib Version Env Variable
-      run: echo TA_LIB_VER=0.4.0 >> $GITHUB_ENV
-
-    - name: Set LSB_RELEASE Cache Key
-      run: echo "LSB_RELEASE=$(lsb_release -a 2>/dev/null | sha256sum | cut -d ' ' -f1)" >> $GITHUB_ENV
 
     - name: Pre-Commit cache
       uses: actions/cache@v2
       with:
         path: ~/.cache/pre-commit
         key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
-    - name: TA-Lib Cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/libta_lib.a
-        key: ta-lib|${{ env.TA_LIB_VER }}|${{ env.LSB_RELEASE }}|1
-
-    - name: Install TA-Lib
-      run: |
-        export INSTALL_LOC=/usr/local
-        if [ -f ~/.cache/libta_lib.a ]; then
-          sudo cp ~/.cache/libta_lib.a ${INSTALL_LOC}/lib/libta_lib.a
-        fi
-        if [ ! -f "${INSTALL_LOC}/lib/libta_lib.a" ]; then
-          sudo apt-get update
-          sudo apt-get install -y gcc build-essential curl
-          echo "Installing to ${INSTALL_LOC}"
-          curl -L -o ta-lib-${{ env.TA_LIB_VER }}-src.tar.gz https://github.com/freqtrade/freqtrade/raw/develop/build_helpers/ta-lib-${{ env.TA_LIB_VER }}-src.tar.gz
-          tar zxvf ta-lib-${{ env.TA_LIB_VER }}-src.tar.gz
-          cd ta-lib \
-          && curl -L -o fix-werror-format-security.patch 'https://aur.archlinux.org/cgit/aur.git/plain/fix-werror-format-security.patch?h=ta-lib' \
-          && cat fix-werror-format-security.patch \
-          && curl -L -o ta-lib-${{ env.TA_LIB_VER }}-asneeded.patch 'https://aur.archlinux.org/cgit/aur.git/plain/ta-lib-${{ env.TA_LIB_VER }}-asneeded.patch?h=ta-lib' \
-          && cat ta-lib-${{ env.TA_LIB_VER }}-asneeded.patch \
-          && patch -Np1 -i fix-werror-format-security.patch \
-          && patch -Np1 -i ta-lib-${{ env.TA_LIB_VER }}-asneeded.patch \
-          && sed -i.bak "s|0.00000001|0.000000000000000001 |g" src/ta_func/ta_utility.h \
-          && curl 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' -o config.guess \
-          && curl 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD' -o config.sub \
-          && ./configure --prefix=${INSTALL_LOC}/ \
-          && (make -j$(nproc) || make -j$(nproc)) \
-          && sudo make install
-          sudo ldconfig
-          cd .. && rm -rf ./ta-lib/ ta-lib-${{ env.TA_LIB_VER }}-src.tar.gz
-          mkdir ~/.cache
-          sudo cp ${INSTALL_LOC}/lib/libta_lib.a ~/.cache/libta_lib.a
-          sudo chown $(id -u):$(id -g) ~/.cache/libta_lib.a
-        else
-          echo "TA-lib already installed, skipping installation"
-        fi
 
     - name: Check ALL Files On Branch
       uses: pre-commit/action@v2.0.0
