@@ -34,9 +34,10 @@ class Apollo11(IStrategy):
     s1_ema_sm = 5
     s1_ema_md = 10
     s1_ema_xl = 50
-    s1_ema_xxl = 200
+    s1_ema_xxl = 150
 
     # Signal 2
+    s2_ema_xxl = 200
     s2_ema_input = 50
     s2_ema_offset_input = -1
 
@@ -101,10 +102,10 @@ class Apollo11(IStrategy):
         dataframe["s1_ema_xxl"] = ta.EMA(dataframe, timeperiod=self.s1_ema_xxl)
 
         s2_ema_value = ta.EMA(dataframe, timeperiod=self.s2_ema_input)
-        s2_ema_xxl_value = ta.EMA(dataframe, timeperiod=200)
+        s2_ema_xxl_value = ta.EMA(dataframe, timeperiod=self.s2_ema_xxl)
         dataframe["s2_ema"] = s2_ema_value - s2_ema_value * self.s2_ema_offset_input
         dataframe["s2_ema_xxl_off"] = s2_ema_xxl_value - s2_ema_xxl_value * self.s2_fib_lower_value
-        dataframe["s2_ema_xxl"] = ta.EMA(dataframe, timeperiod=200)
+        dataframe["s2_ema_xxl"] = ta.EMA(dataframe, timeperiod=self.s2_ema_xxl)
 
         s2_bb_sma_value = ta.SMA(dataframe, timeperiod=self.s2_bb_sma_length)
         s2_bb_std_dev_value = ta.STDDEV(dataframe, self.s2_bb_std_dev_length)
