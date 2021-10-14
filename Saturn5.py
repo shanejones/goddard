@@ -11,7 +11,7 @@ def to_minutes(**timdelta_kwargs):
     return int(timedelta(**timdelta_kwargs).total_seconds() / 60)
 
 
-class Saturn5b(IStrategy):
+class Saturn5(IStrategy):
     timeframe = "15m"
 
     # Stoploss
@@ -132,6 +132,7 @@ class Saturn5b(IStrategy):
             dataframe["volume"] > 0,
         ]
         dataframe.loc[reduce(lambda x, y: x & y, s2_conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
+        return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # This is essentailly ignored as we're using strict ROI / Stoploss / TTP sale scenarios
