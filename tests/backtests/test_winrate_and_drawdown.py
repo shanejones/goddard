@@ -64,7 +64,30 @@ def backtest(request, stake_currency, strategy, expected_result):
         exchange=expected_result.exchange,
     )
     ret = instance()
-    return ret
+    try:
+        yield ret
+    finally:
+        # Let's now make sure the numbers don't deviate much from what we expect
+        # so that we always keep these tight
+        errors = []
+        if ret.stats_pct.winrate + 1 < expected_result.winrate:
+            errors.append("winrate")
+        if ret.stats_pct.max_drawdown - 1 > expected_result.max_drawdown:
+            errors.append("max_drawdown")
+        if errors:
+            errmsg = (
+                "Please update the {exchange}({stake_currency}) expected "
+                "results for the {strategy} strategy during {timerange}."
+            )
+            if "max_drawdown" in errors:
+                old = expected_result.max_drawdown
+                new = int(ret.stats_pct.max_drawdown)
+                errmsg += f" Set `max_drawdown` from {old} to {new}."
+            if "winrate" in errors:
+                old = expected_result.winrate
+                new = int(ret.stats_pct.winrate)
+                errmsg += f" Set `winrate` from {old} to {new}."
+            pytest.fail(errmsg)
 
 
 def test_expected_values(backtest, expected_result, subtests):
