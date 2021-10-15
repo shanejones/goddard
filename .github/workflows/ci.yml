@@ -57,6 +57,7 @@ jobs:
         run: docker-compose build tests
 
       - name: Run Tests
+        continue-on-error: true
         env:
           EXTRA_ARGS: -p no:cacheprovider --exchange=binance --stake-currency=${{ matrix.stake-currency }} --strategy=${{ matrix.strategy }} tests/backtests -k ${{ matrix.timerange }}
         run: |
@@ -106,6 +107,7 @@ jobs:
         run: docker-compose build tests
 
       - name: Run Tests
+        continue-on-error: true
         env:
           EXTRA_ARGS: -p no:cacheprovider --exchange=kucoin --stake-currency=${{ matrix.stake-currency }} --strategy=${{ matrix.strategy }} tests/backtests -k ${{ matrix.timerange }}
         run: |
