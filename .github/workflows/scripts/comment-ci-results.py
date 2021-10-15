@@ -63,7 +63,7 @@ def comment_results(options, results_data):
                         if report_name == "Current":
                             report_table_header_1 += f"| {report_name} "
                         else:
-                            report_sha = results_data[exchange][name]["sha"]
+                            report_sha = results_data[exchange][report_name]["sha"]
                             report_table_header_1 += (
                                 f"| [{report_name}](https://github.com/{options.repo}/commit/{report_sha}) "
                             )
