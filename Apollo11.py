@@ -17,7 +17,7 @@ class Apollo11(IStrategy):
     timeframe = "15m"
 
     # Stoploss¢
-    stoploss = -0.20
+    stoploss = -0.16
     startup_candle_count: int = 480
     trailing_stop = False
     use_custom_stoploss = True
@@ -167,7 +167,6 @@ class Apollo11(IStrategy):
         else:  # negative profit
 
             # Let's try to minimize the loss
-            trade_time_30m = current_time - timedelta(minutes=30)
             trade_time_60h = current_time - timedelta(hours=60)
             trade_time_120h = current_time - timedelta(hours=120)
 
@@ -178,11 +177,6 @@ class Apollo11(IStrategy):
             elif trade_time_60h > trade.open_date_utc:
                 if current_profit <= -0.10:
                     return current_profit / 1.75
-
-            # tank check
-            elif trade_time_30m > trade.open_date_utc:
-                if current_profit <= -0.06:
-                    return -0.10
 
             # if no conditions are matched
             return -1
