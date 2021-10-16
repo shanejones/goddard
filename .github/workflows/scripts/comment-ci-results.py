@@ -37,12 +37,16 @@ def delete_previous_comments(commit, created_comment_ids, exchanges):
         comment.delete()
 
 
-def build_row_line(previous_value, current_value, higher_is_better=True):
+def build_row_line(previous_value, current_value, higher_is_better=True, percentage=True):
+    if percentage is True:
+        pct = " %"
+    else:
+        pct = ""
     if isinstance(current_value, str) or isinstance(previous_value, str):
         if not isinstance(current_value, str):
-            current_value = f"{current_value} %"
+            current_value = f"{current_value}{pct}"
         if not isinstance(previous_value, str):
-            previous_value = f"{previous_value} %"
+            previous_value = f"{previous_value}{pct}"
         return f" \N{DOUBLE EXCLAMATION MARK} | {current_value} | {previous_value} |"
     same = "\N{SNOWFLAKE}"
     if higher_is_better:
@@ -53,12 +57,12 @@ def build_row_line(previous_value, current_value, higher_is_better=True):
         higher = "\N{COLLISION SYMBOL}"
     row_line = ""
     if current_value > previous_value:
-        row_line += f" {higher} | {current_value} % |"
+        row_line += f" {higher} | {current_value}{pct} |"
     elif current_value == previous_value:
-        row_line += f" {same} | {current_value} % |"
+        row_line += f" {same} | {current_value}{pct} |"
     elif current_value < previous_value:
-        row_line += f" {lower} | {current_value} % |"
-    row_line += f" {previous_value} % |"
+        row_line += f" {lower} | {current_value}{pct} |"
+    row_line += f" {previous_value}{pct} |"
     return row_line
 
 
@@ -138,7 +142,7 @@ def comment_results(options, results_data):
                             current_value = get_value_for_report("Current", key)
                             previous_value = get_value_for_report("Previous", key)
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value, previous_value, percentage=False)
                             comment_body += f"{row_line}\n"
                         elif key == "duration_avg":
                             current_value = get_value_for_report("Current", key)
