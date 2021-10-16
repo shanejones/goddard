@@ -80,7 +80,7 @@ def comment_results(options, results_data):
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             if current_value > previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} % |"
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} % |"
                             elif current_value < previous_value:
@@ -97,7 +97,7 @@ def comment_results(options, results_data):
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} % |"
                             elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} % |"
                             row_line += f" {previous_value} % |"
                             comment_body += f"{row_line}\n"
                         elif key == "profit_sum_pct":
@@ -110,7 +110,7 @@ def comment_results(options, results_data):
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} % |"
                             elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} % |"
                             row_line += f" {previous_value} % |"
                             comment_body += f"{row_line}\n"
                         elif key == "profit_total_pct":
@@ -123,7 +123,7 @@ def comment_results(options, results_data):
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} % |"
                             elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} % |"
                             row_line += f" {previous_value} % |"
                             comment_body += f"{row_line}\n"
                         elif key == "winrate":
@@ -136,7 +136,7 @@ def comment_results(options, results_data):
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} % |"
                             elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} % |"
                             row_line += f" {previous_value} % |"
                             comment_body += f"{row_line}\n"
                         elif key == "trades":
@@ -149,7 +149,7 @@ def comment_results(options, results_data):
                             elif current_value == previous_value:
                                 row_line += f" \N{SNOWFLAKE} | {current_value} |"
                             elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} |"
+                                row_line += f" \N{COLLISION SYMBOL} | {current_value} |"
                             row_line += f" {previous_value} |"
                             comment_body += f"{row_line}\n"
                         elif key == "duration_avg":
