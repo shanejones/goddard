@@ -49,7 +49,6 @@ def comment_results(options, results_data):
 
     for exchange in sorted(results_data):
         exchanges.add(exchange)
-        sorted_report_names = list(reversed(sorted(results_data[exchange], key=sort_report_names)))
         name = "Current"
         for currency in results_data[exchange][name]["results"]:
             for strategy in results_data[exchange][name]["results"][currency]:
