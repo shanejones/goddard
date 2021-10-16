@@ -37,7 +37,7 @@ def delete_previous_comments(commit, created_comment_ids, exchanges):
         comment.delete()
 
 
-def build_row_line(previous_value, current_value, higher_is_better=True, percentage=True):
+def build_row_line(*, current_value, previous_value, higher_is_better=True, percentage=True):
     if percentage is True:
         pct = " %"
     else:
@@ -107,42 +107,46 @@ def comment_results(options, results_data):
                             row_line += f" {label } |"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            row_line += build_row_line(current_value, previous_value, higher_is_better=False)
+                            row_line += build_row_line(
+                                current_value=current_value, previous_value=previous_value, higher_is_better=False
+                            )
                             comment_body += f"{row_line}\n"
                         elif key == "profit_mean_pct":
                             label = "Profit Mean"
                             row_line += f" {label } |"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_sum_pct":
                             label = "Profit Sum"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_total_pct":
                             label = "Profit Total"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "winrate":
                             label = "Win Rate"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "trades":
                             label = "Trades"
                             current_value = get_value_for_report("Current", key)
                             previous_value = get_value_for_report("Previous", key)
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value, percentage=False)
+                            row_line += build_row_line(
+                                current_value=current_value, previous_value=previous_value, percentage=False
+                            )
                             comment_body += f"{row_line}\n"
                         elif key == "duration_avg":
                             current_value = get_value_for_report("Current", key)
