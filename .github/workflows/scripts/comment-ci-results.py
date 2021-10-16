@@ -37,6 +37,35 @@ def delete_previous_comments(commit, created_comment_ids, exchanges):
         comment.delete()
 
 
+def build_row_line(previous_value, current_value, higher_is_better=True, percentage=True):
+    if percentage is True:
+        pct = " %"
+    else:
+        pct = ""
+    if isinstance(current_value, str) or isinstance(previous_value, str):
+        if not isinstance(current_value, str):
+            current_value = f"{current_value}{pct}"
+        if not isinstance(previous_value, str):
+            previous_value = f"{previous_value}{pct}"
+        return f" \N{DOUBLE EXCLAMATION MARK} | {current_value} | {previous_value} |"
+    same = "\N{SNOWFLAKE}"
+    if higher_is_better:
+        higher = "\N{ROCKET}"
+        lower = "\N{COLLISION SYMBOL}"
+    else:
+        lower = "\N{ROCKET}"
+        higher = "\N{COLLISION SYMBOL}"
+    row_line = ""
+    if current_value > previous_value:
+        row_line += f" {higher} | {current_value}{pct} |"
+    elif current_value == previous_value:
+        row_line += f" {same} | {current_value}{pct} |"
+    elif current_value < previous_value:
+        row_line += f" {lower} | {current_value}{pct} |"
+    row_line += f" {previous_value}{pct} |"
+    return row_line
+
+
 def comment_results(options, results_data):
     gh = github.Github(os.environ["GITHUB_TOKEN"])
     repo = gh.get_repo(options.repo)
@@ -49,7 +78,6 @@ def comment_results(options, results_data):
 
     for exchange in sorted(results_data):
         exchanges.add(exchange)
-        sorted_report_names = list(reversed(sorted(results_data[exchange], key=sort_report_names)))
         name = "Current"
         for currency in results_data[exchange][name]["results"]:
             for strategy in results_data[exchange][name]["results"][currency]:
@@ -79,78 +107,42 @@ def comment_results(options, results_data):
                             row_line += f" {label } |"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            if current_value > previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} % |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} % |"
-                            row_line += f" {previous_value} % |"
+                            row_line += build_row_line(current_value, previous_value, higher_is_better=False)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_mean_pct":
                             label = "Profit Mean"
                             row_line += f" {label } |"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            if current_value > previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} % |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} % |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
-                            row_line += f" {previous_value} % |"
+                            row_line += build_row_line(current_value, previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_sum_pct":
                             label = "Profit Sum"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            if current_value > previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} % |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} % |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
-                            row_line += f" {previous_value} % |"
+                            row_line += build_row_line(current_value, previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_total_pct":
                             label = "Profit Total"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            if current_value > previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} % |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} % |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
-                            row_line += f" {previous_value} % |"
+                            row_line += build_row_line(current_value, previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "winrate":
                             label = "Win Rate"
                             current_value = get_value_for_report("Current", key, round_cases=4)
                             previous_value = get_value_for_report("Previous", key, round_cases=4)
                             row_line += f" {label } |"
-                            if current_value > previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} % |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} % |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % |"
-                            row_line += f" {previous_value} % |"
+                            row_line += build_row_line(current_value, previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "trades":
                             label = "Trades"
                             current_value = get_value_for_report("Current", key)
                             previous_value = get_value_for_report("Previous", key)
                             row_line += f" {label } |"
-                            if current_value > previous_value:
-                                row_line += f" \N{ROCKET} | {current_value} |"
-                            elif current_value == previous_value:
-                                row_line += f" \N{SNOWFLAKE} | {current_value} |"
-                            elif current_value < previous_value:
-                                row_line += f" \N{DOUBLE EXCLAMATION MARK} | {current_value} |"
-                            row_line += f" {previous_value} |"
+                            row_line += build_row_line(current_value, previous_value, percentage=False)
                             comment_body += f"{row_line}\n"
                         elif key == "duration_avg":
                             current_value = get_value_for_report("Current", key)
