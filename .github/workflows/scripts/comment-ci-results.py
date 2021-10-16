@@ -39,7 +39,11 @@ def delete_previous_comments(commit, created_comment_ids, exchanges):
 
 def build_row_line(previous_value, current_value, higher_is_better=True):
     if isinstance(current_value, str) or isinstance(previous_value, str):
-        return f" \N{DOUBLE EXCLAMATION MARK} | {current_value} % | {previous_value} % |"
+        if not isinstance(current_value, str):
+            current_value = f"{current_value} %"
+        if not isinstance(previous_value, str):
+            previous_value = f"{previous_value} %"
+        return f" \N{DOUBLE EXCLAMATION MARK} | {current_value} | {previous_value} |"
     same = "\N{SNOWFLAKE}"
     if higher_is_better:
         higher = "\N{ROCKET}"
