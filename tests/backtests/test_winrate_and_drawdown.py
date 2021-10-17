@@ -81,7 +81,7 @@ def backtest(request, stake_currency, strategy, expected_result):
             )
             if "max_drawdown" in errors:
                 old = expected_result.max_drawdown
-                new = int(ret.stats_pct.max_drawdown)
+                new = int(ret.stats_pct.max_drawdown) + 1
                 errmsg += f" Set `max_drawdown` from {old} to {new}."
             if "winrate" in errors:
                 old = expected_result.winrate
