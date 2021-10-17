@@ -37,7 +37,7 @@ def delete_previous_comments(commit, created_comment_ids, exchanges):
         comment.delete()
 
 
-def build_row_line(previous_value, current_value, higher_is_better=True, percentage=True):
+def build_row_line(*, current_value, previous_value, higher_is_better=True, percentage=True):
     if percentage is True:
         pct = " %"
     else:
@@ -66,6 +66,13 @@ def build_row_line(previous_value, current_value, higher_is_better=True, percent
     return row_line
 
 
+def get_value_for_report(*, results_data, exchange, currency, strategy, timerange, report_name, key, round_cases=0):
+    value = results_data[exchange][report_name]["results"][currency][strategy][timerange][key]
+    if not isinstance(value, str) and round_cases:
+        value = round(value, round_cases)
+    return value
+
+
 def comment_results(options, results_data):
     gh = github.Github(os.environ["GITHUB_TOKEN"])
     repo = gh.get_repo(options.repo)
@@ -85,12 +92,6 @@ def comment_results(options, results_data):
                 timeranges = results_data[exchange][name]["results"][currency][strategy]
                 for timerange in timeranges:
 
-                    def get_value_for_report(report_name, key, round_cases=0):
-                        value = results_data[exchange][report_name]["results"][currency][strategy][timerange][key]
-                        if not isinstance(value, str) and round_cases:
-                            value = round(value, round_cases)
-                        return value
-
                     comment_body += f"## {timerange}\n\n"
 
                     previous_report_sha = results_data[exchange]["Previous"]["sha"]
@@ -105,53 +106,195 @@ def comment_results(options, results_data):
                         if key == "max_drawdown":
                             label = "Max Drawdown"
                             row_line += f" {label } |"
-                            current_value = get_value_for_report("Current", key, round_cases=4)
-                            previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            row_line += build_row_line(current_value, previous_value, higher_is_better=False)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                                round_cases=4,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                                round_cases=4,
+                            )
+                            row_line += build_row_line(
+                                current_value=current_value, previous_value=previous_value, higher_is_better=False
+                            )
                             comment_body += f"{row_line}\n"
                         elif key == "profit_mean_pct":
                             label = "Profit Mean"
                             row_line += f" {label } |"
-                            current_value = get_value_for_report("Current", key, round_cases=4)
-                            previous_value = get_value_for_report("Previous", key, round_cases=4)
-                            row_line += build_row_line(current_value, previous_value)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                                round_cases=4,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                                round_cases=4,
+                            )
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_sum_pct":
                             label = "Profit Sum"
-                            current_value = get_value_for_report("Current", key, round_cases=4)
-                            previous_value = get_value_for_report("Previous", key, round_cases=4)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                                round_cases=4,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                                round_cases=4,
+                            )
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "profit_total_pct":
                             label = "Profit Total"
-                            current_value = get_value_for_report("Current", key, round_cases=4)
-                            previous_value = get_value_for_report("Previous", key, round_cases=4)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                                round_cases=4,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                                round_cases=4,
+                            )
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "winrate":
                             label = "Win Rate"
-                            current_value = get_value_for_report("Current", key, round_cases=4)
-                            previous_value = get_value_for_report("Previous", key, round_cases=4)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                                round_cases=4,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                                round_cases=4,
+                            )
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value)
+                            row_line += build_row_line(current_value=current_value, previous_value=previous_value)
                             comment_body += f"{row_line}\n"
                         elif key == "trades":
                             label = "Trades"
-                            current_value = get_value_for_report("Current", key)
-                            previous_value = get_value_for_report("Previous", key)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                            )
                             row_line += f" {label } |"
-                            row_line += build_row_line(current_value, previous_value, percentage=False)
+                            row_line += build_row_line(
+                                current_value=current_value, previous_value=previous_value, percentage=False
+                            )
                             comment_body += f"{row_line}\n"
                         elif key == "duration_avg":
-                            current_value = get_value_for_report("Current", key)
-                            previous_value = get_value_for_report("Previous", key)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                            )
                             label = "Average Duration"
                             comment_body += f" {label } | \N{STOPWATCH} | {current_value} | {previous_value} |\n"
                         else:
-                            current_value = get_value_for_report("Current", key)
-                            previous_value = get_value_for_report("Previous", key)
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                            )
                             label = key
                             comment_body += f" {label } | | {current_value} | {previous_value} |\n"
                     ft_output = (

@@ -44,7 +44,7 @@ def expected_result(exchange, strategy, stake_currency, timerange):
 
 
 @pytest.fixture
-def backtest(request, stake_currency, strategy, expected_result):
+def backtest(request, stake_currency, strategy, timerange, exchange, expected_result):
     exchange_data_dir = REPO_ROOT / "user_data" / "data" / expected_result.exchange
     if not exchange_data_dir.is_dir():
         pytest.fail(
@@ -60,8 +60,8 @@ def backtest(request, stake_currency, strategy, expected_result):
         request,
         stake_currency=stake_currency,
         strategy=strategy,
-        timerange=expected_result.timerange,
-        exchange=expected_result.exchange,
+        timerange=timerange,
+        exchange=exchange,
     )
     ret = instance()
     try:
@@ -70,18 +70,18 @@ def backtest(request, stake_currency, strategy, expected_result):
         # Let's now make sure the numbers don't deviate much from what we expect
         # so that we always keep these tight
         errors = []
-        if ret.stats_pct.winrate + 1 < expected_result.winrate:
+        if ret.stats_pct.winrate - 1 > expected_result.winrate:
             errors.append("winrate")
-        if ret.stats_pct.max_drawdown - 1 > expected_result.max_drawdown:
+        if ret.stats_pct.max_drawdown + 1 < expected_result.max_drawdown:
             errors.append("max_drawdown")
         if errors:
             errmsg = (
-                "Please update the {exchange}({stake_currency}) expected "
-                "results for the {strategy} strategy during {timerange}."
+                f"Please update the {exchange}({stake_currency}) expected "
+                f"results for the {strategy} strategy during {timerange}."
             )
             if "max_drawdown" in errors:
                 old = expected_result.max_drawdown
-                new = int(ret.stats_pct.max_drawdown)
+                new = int(ret.stats_pct.max_drawdown) + 1
                 errmsg += f" Set `max_drawdown` from {old} to {new}."
             if "winrate" in errors:
                 old = expected_result.winrate

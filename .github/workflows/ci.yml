@@ -57,7 +57,6 @@ jobs:
         run: docker-compose build tests
 
       - name: Run Tests
-        continue-on-error: true
         env:
           EXTRA_ARGS: -p no:cacheprovider --exchange=binance --stake-currency=${{ matrix.stake-currency }} --strategy=${{ matrix.strategy }} tests/backtests -k ${{ matrix.timerange }}
         run: |
@@ -66,14 +65,17 @@ jobs:
           docker-compose run --rm tests
 
       - name: List Artifacts
+        if: always()
         run: |
           tree artifacts/
 
       - name: Show Backest Output
+        if: always()
         run: |
           cat artifacts/binance/${{ matrix.stake-currency }}/${{ matrix.strategy }}/backtest-output-${{ matrix.timerange }}.txt
 
       - name: Upload Artifacts
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: binance-testrun-artifacts
@@ -107,7 +109,6 @@ jobs:
         run: docker-compose build tests
 
       - name: Run Tests
-        continue-on-error: true
         env:
           EXTRA_ARGS: -p no:cacheprovider --exchange=kucoin --stake-currency=${{ matrix.stake-currency }} --strategy=${{ matrix.strategy }} tests/backtests -k ${{ matrix.timerange }}
         run: |
@@ -116,14 +117,17 @@ jobs:
           docker-compose run --rm tests
 
       - name: List Artifacts
+        if: always()
         run: |
           tree artifacts/
 
       - name: Show Backest Output
+        if: always()
         run: |
           cat artifacts/kucoin/${{ matrix.stake-currency }}/${{ matrix.strategy }}/backtest-output-${{ matrix.timerange }}.txt
 
       - name: Upload Artifacts
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: kucoin-testrun-artifacts
@@ -132,6 +136,7 @@ jobs:
 
   Backest-CI-Stats:
     runs-on: ubuntu-20.04
+    if: always()
     needs:
       - Kucoin
       - Binance
