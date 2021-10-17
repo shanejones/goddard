@@ -17,7 +17,7 @@ class Apollo11(IStrategy):
     timeframe = "15m"
 
     # Stoploss¢
-    stoploss = -0.20
+    stoploss = -0.16
     startup_candle_count: int = 480
     trailing_stop = False
     use_custom_stoploss = True
@@ -152,35 +152,24 @@ class Apollo11(IStrategy):
         self, pair: str, trade: Trade, current_time: datetime, current_rate: float, current_profit: float, **kwargs
     ) -> float:
 
-        if current_profit > 0:  # positive profit
+        if current_profit > 0.2:
+            return 0.04
+        if current_profit > 0.1:
+            return 0.03
+        if current_profit > 0.06:
+            return 0.02
+        if current_profit > 0.03:
+            return 0.01
 
-            if current_profit > 0.2:
-                return 0.04
-            elif current_profit > 0.1:
-                return 0.03
-            elif current_profit > 0.06:
-                return 0.02
-            elif current_profit > 0.03:
-                return 0.01
-            return 1
+        # Let's try to minimize the loss
+        if current_profit <= -0.10:
+            if trade.open_date_utc + timedelta(hours=60) < current_time:
+                # After 60H since buy
+                return current_profit / 1.75
 
-        else:  # negative profit
-
-            # Let's try to minimize the loss
+        if current_profit <= -0.08:
             if trade.open_date_utc + timedelta(hours=120) < current_time:
                 # After 120H since buy
-                if current_profit <= -0.08:
-                    return current_profit / 1.65
+                return current_profit / 1.70
 
-            elif trade.open_date_utc + timedelta(hours=60) < current_time:
-                # After 60H since buy
-                if current_profit <= -0.10:
-                    return current_profit / 1.75
-
-            # tank check
-            elif trade.open_date_utc + timedelta(minutes=30) < current_time:
-                if current_profit <= -0.06:
-                    return -0.10
-
-            # if no conditions are matched
-            return -1
+        return -1
