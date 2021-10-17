@@ -167,20 +167,18 @@ class Apollo11(IStrategy):
         else:  # negative profit
 
             # Let's try to minimize the loss
-            trade_time_30m = current_time - timedelta(minutes=30)
-            trade_time_60h = current_time - timedelta(hours=60)
-            trade_time_120h = current_time - timedelta(hours=120)
-
-            if trade_time_120h > trade.open_date_utc:
+            if trade.open_date_utc + timedelta(hours=120) < current_time:
+                # After 120H since buy
                 if current_profit <= -0.08:
                     return current_profit / 1.65
 
-            elif trade_time_60h > trade.open_date_utc:
+            elif trade.open_date_utc + timedelta(hours=60) < current_time:
+                # After 60H since buy
                 if current_profit <= -0.10:
                     return current_profit / 1.75
 
             # tank check
-            elif trade_time_30m > trade.open_date_utc:
+            elif trade.open_date_utc + timedelta(minutes=30) < current_time:
                 if current_profit <= -0.06:
                     return -0.10
 
