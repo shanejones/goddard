@@ -31,7 +31,7 @@ class Saturn5(IStrategy):
     s1_ema_sm = 5
     s1_ema_md = 10
     s1_ema_xl = 50
-    s1_ema_xxl = 200
+    s1_ema_xxl = 240
 
     # Signal 2
     s2_ema_input = 50
