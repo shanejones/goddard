@@ -62,6 +62,8 @@ jobs:
         run: |
           mkdir artifacts
           chmod 777 artifacts
+          # Random sleep in order to contain the exchanges from being hit at the same time
+          sleep $(shuf -i 5-10 -n 1)
           docker-compose run --rm tests
 
       - name: List Artifacts
@@ -114,6 +116,8 @@ jobs:
         run: |
           mkdir artifacts
           chmod 777 artifacts
+          # Random sleep in order to contain the exchanges from being hit at the same time
+          sleep $(shuf -i 5-10 -n 1)
           docker-compose run --rm tests
 
       - name: List Artifacts
