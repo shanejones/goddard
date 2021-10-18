@@ -134,6 +134,7 @@ class Apollo11(IStrategy):
             conditions = [
                 qtpylib.crossed_above(dataframe["s2_fib_lower_band"], dataframe["s2_bb_lower_band"]),
                 dataframe["close"] < dataframe["s2_ema"],
+                dataframe["close"] < dataframe["s2_ema_xxl_off"],
                 dataframe["volume"] > 0,
             ]
             dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
