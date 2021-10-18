@@ -90,8 +90,17 @@ def backtest(request, stake_currency, strategy, timerange, exchange, expected_re
             pytest.fail(errmsg)
 
 
-def test_expected_values(backtest, expected_result, subtests):
+def test_expected_values(backtest, expected_result, subtests, exchange, stake_currency, strategy, timerange):
+    errmsg = (
+        f"If expected, please update {exchange}({stake_currency}) expected "
+        f"results for the {strategy} strategy during {timerange}."
+    )
     with subtests.test("Winrate"):
-        assert backtest.stats_pct.winrate >= expected_result.winrate
+        winrate_errmsg = f"Winrate results got worse. {errmsg} Set `winrate` to {int(backtest.stats_pct.winrate)}"
+        assert backtest.stats_pct.winrate >= expected_result.winrate, winrate_errmsg
     with subtests.test("Max Drawdown"):
-        assert backtest.stats_pct.max_drawdown <= expected_result.max_drawdown
+        max_drawdown_errmsg = (
+            f"Max Drawdown results got worse. {errmsg} "
+            f"Set `max_drawdown` to {int(backtest.stats_pct.max_drawdown + 1)}"
+        )
+        assert backtest.stats_pct.max_drawdown <= expected_result.max_drawdown, max_drawdown_errmsg
