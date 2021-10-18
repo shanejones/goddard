@@ -15,7 +15,7 @@ class Saturn5(IStrategy):
     timeframe = "15m"
 
     # Stoploss
-    stoploss = -0.20
+    stoploss = -0.16
     startup_candle_count: int = 480
     trailing_stop = False
     use_custom_stoploss = False
