@@ -66,7 +66,7 @@ class Backtest:
     def __call__(
         self,
         pairlist=None,
-        max_open_trades=6,
+        max_open_trades=10,
         stake_amount="150",
         exchange=None,
         strategy=None,

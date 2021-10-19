@@ -31,5 +31,5 @@ services:
       --config user_data/data/pairlists.json
       --config user_data/data/pairlists-${STAKE_CURRENCY:-busd}.json
       --config user_data/data/${EXCHANGE:-binance}-${STAKE_CURRENCY:-busd}-static.json
-      --max-open-trades ${MAX_OPEN_TRADES:-6}
+      --max-open-trades ${MAX_OPEN_TRADES:-10}
       --stake-amount ${STAKE_AMOUNT:-150}
