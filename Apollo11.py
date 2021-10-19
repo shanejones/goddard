@@ -92,6 +92,14 @@ class Apollo11(IStrategy):
         ]
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        # MACD
+        macd = ta.MACD(dataframe)
+        dataframe["macd"] = macd["macd"]
+        dataframe["macdsignal"] = macd["macdsignal"]
+        dataframe["macdhist"] = macd["macdhist"]
+        dataframe["cci"] = ta.CCI(dataframe)
+        dataframe["uptrend"] = (dataframe["macd"] > 0) & (dataframe["macd"] > dataframe["macdsignal"])
+        dataframe["downtrend"] = (dataframe["macd"] < 0) & (dataframe["macd"] < dataframe["macdsignal"])
 
         # Adding EMA's into the dataframe
         dataframe["s1_ema_xs"] = ta.EMA(dataframe, timeperiod=self.s1_ema_xs)
@@ -152,14 +160,23 @@ class Apollo11(IStrategy):
         self, pair: str, trade: Trade, current_time: datetime, current_rate: float, current_profit: float, **kwargs
     ) -> float:
 
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair=pair, timeframe=self.timeframe)
+        current_candle = dataframe.iloc[-1].squeeze()
+
+        multiplier = 1.0
+        if current_candle["downtrend"]:
+            multiplier = 0.095
+        if current_candle["uptrend"]:
+            multiplier = 1.05
+
         if current_profit > 0.2:
-            return 0.04
+            return 0.04 * multiplier
         if current_profit > 0.1:
-            return 0.03
+            return 0.03 * multiplier
         if current_profit > 0.06:
-            return 0.02
+            return 0.02 * multiplier
         if current_profit > 0.03:
-            return 0.01
+            return 0.01 * multiplier
 
         # Let's try to minimize the loss
         if current_profit <= -0.10:
