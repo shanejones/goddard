@@ -165,9 +165,9 @@ class Apollo11(IStrategy):
 
         multiplier = 1.0
         if current_candle["downtrend"]:
-            multiplier = 0.095
+            multiplier = 0.090
         if current_candle["uptrend"]:
-            multiplier = 1.05
+            multiplier = 1.090
 
         if current_profit > 0.2:
             return 0.04 * multiplier
