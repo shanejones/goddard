@@ -116,6 +116,13 @@ class Apollo11(IStrategy):
 
         dataframe["s2_fib_lower_band"] = s2_fib_sma_value - s2_fib_atr_value * self.s2_fib_lower_value
 
+        # Volume weighted MACD
+        dataframe["fastMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 12) / ta.EMA(dataframe["volume"], 12)
+        dataframe["slowMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 26) / ta.EMA(dataframe["volume"], 26)
+        dataframe["vwmacd"] = dataframe["fastMA"] - dataframe["slowMA"]
+        dataframe["signal"] = ta.EMA(dataframe["vwmacd"], 9)
+        dataframe["hist"] = dataframe["vwmacd"] - dataframe["signal"]
+
         return dataframe
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -123,6 +130,7 @@ class Apollo11(IStrategy):
 
         if self.buy_signal_1:
             conditions = [
+                dataframe["vwmacd"] < dataframe["signal"],
                 dataframe["close"] < dataframe["s1_ema_xxl"],
                 qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
                 dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
