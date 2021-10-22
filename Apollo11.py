@@ -8,6 +8,7 @@ import talib.abstract as ta
 from freqtrade.persistence import Trade
 from freqtrade.strategy import IStrategy
 from pandas import DataFrame, Series
+from pandas import Series
 
 
 def to_minutes(**timdelta_kwargs):
@@ -17,7 +18,7 @@ def to_minutes(**timdelta_kwargs):
 class Apollo11(IStrategy):
     timeframe = "15m"
 
-    # Stoploss¢
+    # Stoploss
     stoploss = -0.16
     startup_candle_count: int = 480
     trailing_stop = False
@@ -130,7 +131,7 @@ class Apollo11(IStrategy):
 
         # PMax
         dataframe["pm"], dataframe["pmx"] = pmax(heikinashi, MAtype=1, length=9, multiplier=27, period=10, src=1)
-        dataframe["source"] = (dataframe["high"] + dataframe["low"] + dataframe["open"] + dataframe["close"])/4
+        dataframe["source"] = (dataframe["high"] + dataframe["low"] + dataframe["open"] + dataframe["close"]) / 4
         dataframe["pmax_thresh"] = ta.EMA(dataframe["source"], timeperiod=9)
 
         dataframe = HA(dataframe, 4)
@@ -198,26 +199,26 @@ class Apollo11(IStrategy):
     # Heikin-Ashi
 def HA(dataframe, smoothing=None):
     
-    dataframe["HA_Close"]=(dataframe["open"] + dataframe["high"] + dataframe["low"] + dataframe["close"])/4
+    dataframe["HA_Close"] = (dataframe["open"] + dataframe["high"] + dataframe["low"] + dataframe["close"]) / 4
 
     dataframe.reset_index(inplace=True)
 
-    ha_open = [ (dataframe["open"][0] + dataframe["close"][0]) / 2 ]
-    [ ha_open.append((ha_open[i] + dataframe["HA_Close"].values[i]) / 2) for i in range(0, len(dataframe)-1) ]
+    ha_open = [(dataframe["open"][0] + dataframe["close"][0]) / 2]
+	[ha_open.append((ha_open[i] + dataframe["HA_Close"].values[i]) / 2) for i in range(0, len(dataframe) - 1)]
     dataframe["HA_Open"] = ha_open
 
     dataframe.set_index("index", inplace=True)
 
-    dataframe["HA_High"]=dataframe[["HA_Open","HA_Close","high"]].max(axis=1)
-    dataframe["HA_Low"]=dataframe[["HA_Open","HA_Close","low"]].min(axis=1)
+    dataframe["HA_High"] = dataframe[["HA_Open", "HA_Close", "high"]].max(axis=1)
+	dataframe["HA_Low"] = dataframe[["HA_Open", "HA_Close", "low"]].min(axis=1)
 
     if smoothing is not None:
         sml = abs(int(smoothing))
         if sml > 0:
-            dataframe["Smooth_HA_O"]=ta.EMA(dataframe["HA_Open"], sml)
-            dataframe["Smooth_HA_C"]=ta.EMA(dataframe["HA_Close"], sml)
-            dataframe["Smooth_HA_H"]=ta.EMA(dataframe["HA_High"], sml)
-            dataframe["Smooth_HA_L"]=ta.EMA(dataframe["HA_Low"], sml)
+            dataframe["Smooth_HA_O"] = ta.EMA(dataframe["HA_Open"], sml)
+			dataframe["Smooth_HA_C"] = ta.EMA(dataframe["HA_Close"], sml)
+			dataframe["Smooth_HA_H"] = ta.EMA(dataframe["HA_High"], sml)
+			dataframe["Smooth_HA_L"] = ta.EMA(dataframe["HA_Low"], sml)
             
     return dataframe
 
@@ -242,8 +243,8 @@ def pmax(dataframe, period, multiplier, length, MAtype, src):
         mavalue = ta.EMA(masrc, timeperiod=length)
     
     dataframe[atr] = ta.ATR(dataframe, timeperiod=period)
-    dataframe["basic_ub"] = mavalue + ((multiplier/10) * dataframe[atr])
-    dataframe["basic_lb"] = mavalue - ((multiplier/10) * dataframe[atr])
+	dataframe["basic_ub"] = mavalue + ((multiplier / 10) * dataframe[atr])
+	dataframe["basic_lb"] = mavalue - ((multiplier / 10) * dataframe[atr])
 
     basic_ub = dataframe["basic_ub"].values
     final_ub = np.full(len(dataframe), 0.00)
@@ -251,12 +252,12 @@ def pmax(dataframe, period, multiplier, length, MAtype, src):
     final_lb = np.full(len(dataframe), 0.00)
 
     for i in range(period, len(dataframe)):
-        final_ub[i] = basic_ub[i] if (
-            basic_ub[i] < final_ub[i - 1]
-            or mavalue[i - 1] > final_ub[i - 1]) else final_ub[i - 1]
-        final_lb[i] = basic_lb[i] if (
-            basic_lb[i] > final_lb[i - 1]
-            or mavalue[i - 1] < final_lb[i - 1]) else final_lb[i - 1]
+        final_ub[i] = (
+			basic_ub[i] if (basic_ub[i] < final_ub[i - 1] or mavalue[i - 1] > final_ub[i - 1]) else final_ub[i - 1]
+		)
+		final_lb[i] = (
+			basic_lb[i] if (basic_lb[i] > final_lb[i - 1] or mavalue[i - 1] < final_lb[i - 1]) else final_lb[i - 1]
+		)
 
     dataframe["final_ub"] = final_ub
     dataframe["final_lb"] = final_lb
@@ -264,19 +265,20 @@ def pmax(dataframe, period, multiplier, length, MAtype, src):
     pm_arr = np.full(len(dataframe), 0.00)
     for i in range(period, len(dataframe)):
         pm_arr[i] = (
-            final_ub[i] if (pm_arr[i - 1] == final_ub[i - 1]
-                                    and mavalue[i] <= final_ub[i])
-        else final_lb[i] if (
-            pm_arr[i - 1] == final_ub[i - 1]
-            and mavalue[i] > final_ub[i]) else final_lb[i]
-        if (pm_arr[i - 1] == final_lb[i - 1]
-            and mavalue[i] >= final_lb[i]) else final_ub[i]
-        if (pm_arr[i - 1] == final_lb[i - 1]
-            and mavalue[i] < final_lb[i]) else 0.00)
+			final_ub[i]
+			if (pm_arr[i - 1] == final_ub[i - 1] and mavalue[i] <= final_ub[i])
+			else final_lb[i]
+			if (pm_arr[i - 1] == final_ub[i - 1] and mavalue[i] > final_ub[i])
+			else final_lb[i]
+			if (pm_arr[i - 1] == final_lb[i - 1] and mavalue[i] >= final_lb[i])
+			else final_ub[i]
+			if (pm_arr[i - 1] == final_lb[i - 1] and mavalue[i] < final_lb[i])
+			else 0.00
+		)
 
     pm = Series(pm_arr)
 
     # Trend detector
-    pmx = np.where((pm_arr > 0.00), np.where((mavalue < pm_arr), "down",  "up"), np.NaN)
+    pmx = np.where((pm_arr > 0.00), np.where((mavalue < pm_arr), "down", "up"), np.NaN)
 
     return pm, pmx
