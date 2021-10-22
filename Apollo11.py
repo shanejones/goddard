@@ -7,7 +7,7 @@ import numpy as np
 import talib.abstract as ta
 from freqtrade.persistence import Trade
 from freqtrade.strategy import IStrategy
-from pandas import DataFrame, Series
+from pandas import DataFrame
 from pandas import Series
 
 
