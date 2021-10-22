@@ -238,10 +238,10 @@ def pmax(dataframe, period, multiplier, length, MAtype, src):
 
     if src == 1:
         masrc = dataframe["close"]
-    
+
     if MAtype == 1:
         mavalue = ta.EMA(masrc, timeperiod=length)
-    
+
     dataframe[atr] = ta.ATR(dataframe, timeperiod=period)
 	dataframe["basic_ub"] = mavalue + ((multiplier / 10) * dataframe[atr])
 	dataframe["basic_lb"] = mavalue - ((multiplier / 10) * dataframe[atr])
