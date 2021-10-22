@@ -124,7 +124,7 @@ class Apollo11(IStrategy):
         dataframe["vwmacd"] = dataframe["fastMA"] - dataframe["slowMA"]
         dataframe["signal"] = ta.EMA(dataframe["vwmacd"], 9)
         dataframe["hist"] = dataframe["vwmacd"] - dataframe["signal"]
-        
+
         # Heikin-Ashi
         heikinashi = qtpylib.heikinashi(dataframe)
         heikinashi["volume"] = dataframe["volume"]
@@ -195,10 +195,10 @@ class Apollo11(IStrategy):
                 return current_profit / 1.70
 
         return -1
-    
+
     # Heikin-Ashi
 def HA(dataframe, smoothing=None):
-    
+
     dataframe["HA_Close"] = (dataframe["open"] + dataframe["high"] + dataframe["low"] + dataframe["close"]) / 4
 
     dataframe.reset_index(inplace=True)
@@ -219,7 +219,7 @@ def HA(dataframe, smoothing=None):
 			dataframe["Smooth_HA_C"] = ta.EMA(dataframe["HA_Close"], sml)
 			dataframe["Smooth_HA_H"] = ta.EMA(dataframe["HA_High"], sml)
 			dataframe["Smooth_HA_L"] = ta.EMA(dataframe["HA_Low"], sml)
-            
+
     return dataframe
 
 # PMax
