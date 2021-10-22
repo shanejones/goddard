@@ -162,11 +162,11 @@ class Apollo11(IStrategy):
 
         if current_profit > 0.2:
             return 0.04
-        if current_profit > 0.1:
+        elif current_profit > 0.1:
             return 0.03
-        if current_profit > 0.06:
+        elif current_profit > 0.06:
             return 0.02
-        if current_profit > 0.03:
+        elif current_profit > 0.03:
             return 0.01
 
         # Let's try to minimize the loss
@@ -175,7 +175,7 @@ class Apollo11(IStrategy):
                 # After 60H since buy
                 return current_profit / 1.75
 
-        if current_profit <= -0.08:
+        elif current_profit <= -0.08:
             if trade.open_date_utc + timedelta(hours=120) < current_time:
                 # After 120H since buy
                 return current_profit / 1.70
