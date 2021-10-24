@@ -26,6 +26,7 @@ class Apollo11(IStrategy):
     # signal controls
     buy_signal_1 = True
     buy_signal_2 = True
+    buy_signal_3 = True
 
     # Indicator values:
 
@@ -116,6 +117,9 @@ class Apollo11(IStrategy):
 
         dataframe["s2_fib_lower_band"] = s2_fib_sma_value - s2_fib_atr_value * self.s2_fib_lower_value
 
+        s3_bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
+        dataframe["s3_bb_lowerband"] = s3_bollinger["lower"]
+
         # Volume weighted MACD
         dataframe["fastMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 12) / ta.EMA(dataframe["volume"], 12)
         dataframe["slowMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 26) / ta.EMA(dataframe["volume"], 26)
@@ -146,7 +150,14 @@ class Apollo11(IStrategy):
             ]
             dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
 
-        if not self.buy_signal_1 and not self.buy_signal_2:
+        if self.buy_signal_3:
+            conditions = [
+                dataframe["low"] < dataframe["s3_bb_lowerband"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_3")
+
+        if not self.buy_signal_1 and not self.buy_signal_2 and not self.buy_signal_3:
             dataframe.loc[(), "buy"] = 0
 
         return dataframe
