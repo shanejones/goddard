@@ -132,7 +132,7 @@ class Saturn5(IStrategy):
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # basic buy methods to keep the strategy simple
-        
+
         if self.buy_signal_1:
             conditions = [
                 dataframe["vwmacd"] < dataframe["signal"],
