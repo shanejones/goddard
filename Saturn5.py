@@ -132,10 +132,11 @@ class Saturn5(IStrategy):
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # basic buy methods to keep the strategy simple
-
+        
         if self.buy_signal_1:
             conditions = [
                 dataframe["vwmacd"] < dataframe["signal"],
+                dataframe["low"] < dataframe["s1_ema_xxl"],
                 dataframe["close"] < dataframe["s1_ema_xxl"],
                 qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
                 dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
