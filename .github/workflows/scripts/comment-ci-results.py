@@ -18,6 +18,12 @@ def sort_report_names(value):
     return -3
 
 
+def sort_buy_signals_last(value):
+    if value.startswith("buy_signal_"):
+        return -1
+    return -2
+
+
 def delete_previous_comments(commit, created_comment_ids, exchanges):
     comment_starts = tuple({f"# {exchange.capitalize()}" for exchange in exchanges})
     comment_starts += tuple({f"## {exchange.capitalize()}" for exchange in exchanges})
@@ -101,7 +107,7 @@ def comment_results(options, results_data):
                     comment_body += f"|     |      | Current | {previous_report_label} |\n"
                     comment_body += "|  --: | :--: |     --: |                     --: |\n"
 
-                    for key in sorted(timeranges[timerange]):
+                    for key in sorted(timeranges[timerange], key=sort_buy_signals_last):
                         row_line = "| "
                         if key == "max_drawdown":
                             label = "Max Drawdown"
@@ -276,6 +282,26 @@ def comment_results(options, results_data):
                             )
                             label = "Average Duration"
                             comment_body += f" {label } | \N{STOPWATCH} | {current_value} | {previous_value} |\n"
+                        elif key.startswith("buy_signal"):
+                            current_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Current",
+                                key=key,
+                            )
+                            previous_value = get_value_for_report(
+                                results_data=results_data,
+                                exchange=exchange,
+                                currency=currency,
+                                strategy=strategy,
+                                timerange=timerange,
+                                report_name="Previous",
+                                key=key,
+                            )
+                            comment_body += f" {key} | \N{SPORTS MEDAL} | {current_value} | {previous_value} |\n"
                         else:
                             current_value = get_value_for_report(
                                 results_data=results_data,
