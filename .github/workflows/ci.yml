@@ -54,7 +54,10 @@ jobs:
           submodules: true
 
       - name: Build Tests Image
-        run: docker-compose build tests
+        run: |
+          # Random sleep in order not to hit dockerhub at the same time
+          sleep $(shuf -i 5-15 -n 1)
+          docker-compose build tests
 
       - name: Run Tests
         env:
