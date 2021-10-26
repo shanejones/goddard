@@ -21,6 +21,11 @@ class Saturn5(IStrategy):
     use_custom_stoploss = False
     use_sell_signal = False
 
+    # signal controls
+    buy_signal_1 = True
+    buy_signal_2 = True
+    buy_signal_3 = True
+
     # ROI table:
     minimal_roi = {
         "0": 0.05,
@@ -113,6 +118,9 @@ class Saturn5(IStrategy):
 
         dataframe["s2_fib_lower_band"] = s2_fib_sma_value - s2_fib_atr_value * self.s2_fib_lower_value
 
+        s3_bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
+        dataframe["s3_bb_lowerband"] = s3_bollinger["lower"]
+
         # Volume weighted MACD
         dataframe["fastMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 12) / ta.EMA(dataframe["volume"], 12)
         dataframe["slowMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 26) / ta.EMA(dataframe["volume"], 26)
@@ -124,23 +132,36 @@ class Saturn5(IStrategy):
 
     def populate_buy_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # basic buy methods to keep the strategy simple
+        
+        if self.buy_signal_1:
+            conditions = [
+                dataframe["vwmacd"] < dataframe["signal"],
+                dataframe["low"] < dataframe["s1_ema_xxl"],
+                dataframe["close"] < dataframe["s1_ema_xxl"],
+                qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
+                dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_1")
 
-        s1_conditions = [
-            dataframe["vwmacd"] < dataframe["signal"],
-            dataframe["low"] < dataframe["s1_ema_xxl"],
-            dataframe["close"] > dataframe["s1_ema_xxl"],
-            qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
-            dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
-            dataframe["volume"] > 0,
-        ]
-        dataframe.loc[reduce(lambda x, y: x & y, s1_conditions), ["buy", "buy_tag"]] = (1, "buy_signal_1")
+        if self.buy_signal_2:
+            conditions = [
+                qtpylib.crossed_above(dataframe["s2_fib_lower_band"], dataframe["s2_bb_lower_band"]),
+                dataframe["close"] < dataframe["s2_ema"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
 
-        s2_conditions = [
-            qtpylib.crossed_above(dataframe["s2_fib_lower_band"], dataframe["s2_bb_lower_band"]),
-            dataframe["close"] < dataframe["s2_ema"],
-            dataframe["volume"] > 0,
-        ]
-        dataframe.loc[reduce(lambda x, y: x & y, s2_conditions), ["buy", "buy_tag"]] = (1, "buy_signal_2")
+        if self.buy_signal_3:
+            conditions = [
+                dataframe["low"] < dataframe["s3_bb_lowerband"],
+                dataframe["volume"] > 0,
+            ]
+            dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_3")
+
+        if not self.buy_signal_1 and not self.buy_signal_2 and not self.buy_signal_3:
+            dataframe.loc[(), "buy"] = 0
+
         return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
