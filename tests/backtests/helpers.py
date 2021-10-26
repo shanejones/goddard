@@ -187,6 +187,23 @@ class BacktestResults:
 
     @_stats_pct.default
     def _set__stats_pct(self):
+        tags = {}
+        for trade in self.results.trades:
+            tag = f"{trade.buy_tag} wins / losses / force-sell"
+            profit = trade.profit_abs
+            force_sell = trade.sell_reason == "force_sell"
+            if tag not in tags:
+                tags[tag] = {"wins": 0, "losses": 0, "force_sell": 0}
+            if force_sell:
+                tags[tag]["force_sell"] += 1
+            elif profit > 0:
+                tags[tag]["wins"] += 1
+            else:
+                tags[tag]["losses"] += 1
+
+        for tag, data in tags.items():
+            tags[tag] = f"{data['wins']} / {data['losses']} / {data['force_sell']}"
+
         return {
             "duration_avg": self.full_stats.duration_avg,
             "profit_sum_pct": self.full_stats.profit_sum_pct,
@@ -195,6 +212,7 @@ class BacktestResults:
             "max_drawdown": self.results.max_drawdown * 100,
             "trades": self.full_stats.trades,
             "winrate": round(self.full_stats.wins * 100.0 / self.full_stats.trades, 2),
+            **tags,
         }
 
     @stats_pct.default
