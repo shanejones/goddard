@@ -31,6 +31,8 @@ class Saturn5(IStrategy):
         "0": 0.05,
     }
 
+    # Indicator values:
+
     # Signal 1
     s1_ema_xs = 3
     s1_ema_sm = 5
