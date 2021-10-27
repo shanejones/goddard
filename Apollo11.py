@@ -16,7 +16,7 @@ def to_minutes(**timdelta_kwargs):
 class Apollo11(IStrategy):
     timeframe = "15m"
 
-    # Stoploss¢
+    # Stoploss
     stoploss = -0.16
     startup_candle_count: int = 480
     trailing_stop = False
@@ -27,6 +27,11 @@ class Apollo11(IStrategy):
     buy_signal_1 = True
     buy_signal_2 = True
     buy_signal_3 = True
+
+    # ROI table:
+    minimal_roi = {
+        "0": 10,  # This is 10000%, which basically disables ROI
+    }
 
     # Indicator values:
 

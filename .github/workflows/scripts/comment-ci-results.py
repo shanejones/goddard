@@ -10,20 +10,6 @@ import github
 from github.GithubException import GithubException
 
 
-def sort_report_names(value):
-    if value == "Current":
-        return -1
-    if value == "Previous":
-        return -2
-    return -3
-
-
-def sort_buy_signals_last(value):
-    if value.startswith("buy_signal_"):
-        return -1
-    return -2
-
-
 def delete_previous_comments(commit, created_comment_ids, exchanges):
     comment_starts = tuple({f"# {exchange.capitalize()}" for exchange in exchanges})
     comment_starts += tuple({f"## {exchange.capitalize()}" for exchange in exchanges})
@@ -107,7 +93,16 @@ def comment_results(options, results_data):
                     comment_body += f"|     |      | Current | {previous_report_label} |\n"
                     comment_body += "|  --: | :--: |     --: |                     --: |\n"
 
-                    for key in sorted(timeranges[timerange], key=sort_buy_signals_last):
+                    # Sort key, making sure buy tags are also sorted, but last in the list
+                    buy_tags = []
+                    sorted_keys = []
+                    for key in sorted(timeranges[timerange]):
+                        if key.startswith("buy_signal_"):
+                            buy_tags.append(key)
+                            continue
+                        sorted_keys.append(key)
+
+                    for key in sorted_keys + buy_tags:
                         row_line = "| "
                         if key == "max_drawdown":
                             label = "Max Drawdown"
