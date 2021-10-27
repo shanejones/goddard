@@ -159,11 +159,12 @@ class Apollo11(IStrategy):
         if self.buy_signal_3:
             conditions = [
                 dataframe["low"] < dataframe["s3_bb_lowerband"],
+                dataframe["low"] > dataframe["s1_ema_xxl"],
                 dataframe["volume"] > 0,
             ]
             dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_3")
 
-        if not self.buy_signal_1 and not self.buy_signal_2 and not self.buy_signal_3:
+        if not all([self.buy_signal_1, self.buy_signal_2, self.buy_signal_3]):
             dataframe.loc[(), "buy"] = 0
 
         return dataframe
