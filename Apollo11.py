@@ -74,9 +74,9 @@ class Apollo11(IStrategy):
             {
                 # Stop trading if a certain amount of stoploss occurred within a certain time window.
                 "method": "StoplossGuard",
-                "lookback_period": to_minutes(hours=6),
+                "lookback_period": to_minutes(hours=3),
                 "trade_limit": 4,  # Considering all pairs that have a minimum of 4 trades
-                "stop_duration": to_minutes(minutes=30),
+                "stop_duration": to_minutes(hours=6),
                 "only_per_pair": False,  # Looks at all pairs
             },
             {
@@ -184,8 +184,10 @@ class Apollo11(IStrategy):
             return 0.03
         if current_profit > 0.06:
             return 0.02
-        if current_profit > 0.03:
+        if current_profit > 0.04:
             return 0.01
+        if current_profit > 0.02:
+            return 0.005
 
         # Let's try to minimize the loss
         if current_profit <= -0.10:
