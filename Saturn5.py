@@ -3,7 +3,6 @@
 # Assited by a number of contributors https://github.com/shanejones/goddard/graphs/contributors
 #
 # Original repo hosted at https://github.com/shanejones/goddard
-
 from datetime import timedelta
 from functools import reduce
 
@@ -145,7 +144,7 @@ class Saturn5(IStrategy):
             conditions = [
                 dataframe["vwmacd"] < dataframe["signal"],
                 dataframe["low"] < dataframe["s1_ema_xxl"],
-                dataframe["close"] < dataframe["s1_ema_xxl"],
+                dataframe["close"] > dataframe["s1_ema_xxl"],
                 qtpylib.crossed_above(dataframe["s1_ema_sm"], dataframe["s1_ema_md"]),
                 dataframe["s1_ema_xs"] < dataframe["s1_ema_xl"],
                 dataframe["volume"] > 0,
