@@ -1,3 +1,8 @@
+# Strategy created by Shane Jones https://twitter.com/shanejones
+#
+# Assited byt a number of contributors https://github.com/shanejones/goddard/graphs/contributors
+#
+# Original repo hosted at https://github.com/shanejones/goddard
 from datetime import timedelta
 from functools import reduce
 
@@ -59,7 +64,7 @@ class Saturn5(IStrategy):
             {
                 # Don't enter a trade right after selling a trade.
                 "method": "CooldownPeriod",
-                "stop_duration": to_minutes(hours=1, minutes=15),
+                "stop_duration": to_minutes(minutes=0),
             },
             {
                 # Stop trading if max-drawdown is reached.
@@ -72,9 +77,9 @@ class Saturn5(IStrategy):
             {
                 # Stop trading if a certain amount of stoploss occurred within a certain time window.
                 "method": "StoplossGuard",
-                "lookback_period": to_minutes(hours=6),
+                "lookback_period": to_minutes(hours=3),
                 "trade_limit": 4,  # Considering all pairs that have a minimum of 4 trades
-                "stop_duration": to_minutes(minutes=30),
+                "stop_duration": to_minutes(hours=6),
                 "only_per_pair": False,  # Looks at all pairs
             },
             {
