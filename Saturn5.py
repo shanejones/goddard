@@ -3,6 +3,7 @@
 # Assited by a number of contributors https://github.com/shanejones/goddard/graphs/contributors
 #
 # Original repo hosted at https://github.com/shanejones/goddard
+
 from datetime import timedelta
 from functools import reduce
 
