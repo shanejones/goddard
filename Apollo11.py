@@ -1,9 +1,3 @@
-# Strategy created by Shane Jones https://twitter.com/shanejones
-#
-# Assited by a number of contributors https://github.com/shanejones/goddard/graphs/contributors
-#
-# Original repo hosted at https://github.com/shanejones/goddard
-
 from datetime import datetime
 from datetime import timedelta
 from functools import reduce
@@ -20,6 +14,11 @@ def to_minutes(**timdelta_kwargs):
 
 
 class Apollo11(IStrategy):
+    # Strategy created by Shane Jones https://twitter.com/shanejones
+    #
+    # Assited by a number of contributors https://github.com/shanejones/goddard/graphs/contributors
+    #
+    # Original repo hosted at https://github.com/shanejones/goddard
     timeframe = "15m"
 
     # Stoploss
