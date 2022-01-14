@@ -58,6 +58,11 @@ class Saturn5(IStrategy):
 
     s2_fib_lower_value = 4.236
 
+    s3_ema_long = 50
+    s3_ema_short = 20
+    s3_ma_fast = 10
+    s3_ma_slow = 20
+
     @property
     def protections(self):
         return [
@@ -128,6 +133,15 @@ class Saturn5(IStrategy):
         s3_bollinger = qtpylib.bollinger_bands(qtpylib.typical_price(dataframe), window=20, stds=3)
         dataframe["s3_bb_lowerband"] = s3_bollinger["lower"]
 
+        dataframe["s3_ema_long"] = ta.EMA(dataframe, timeperiod=self.s3_ema_long)
+        dataframe["s3_ema_short"] = ta.EMA(dataframe, timeperiod=self.s3_ema_short)
+        dataframe["s3_fast_ma"] = ta.EMA(dataframe["volume"] * dataframe["close"], self.s3_ma_fast) / ta.EMA(
+            dataframe["volume"], self.s3_ma_fast
+        )
+        dataframe["s3_slow_ma"] = ta.EMA(dataframe["volume"] * dataframe["close"], self.s3_ma_slow) / ta.EMA(
+            dataframe["volume"], self.s3_ma_slow
+        )
+
         # Volume weighted MACD
         dataframe["fastMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 12) / ta.EMA(dataframe["volume"], 12)
         dataframe["slowMA"] = ta.EMA(dataframe["volume"] * dataframe["close"], 26) / ta.EMA(dataframe["volume"], 26)
@@ -162,7 +176,8 @@ class Saturn5(IStrategy):
         if self.buy_signal_3:
             conditions = [
                 dataframe["low"] < dataframe["s3_bb_lowerband"],
-                dataframe["low"] > dataframe["s1_ema_xxl"],
+                dataframe["high"] > dataframe["s3_slow_ma"],
+                dataframe["high"] < dataframe["s3_ema_long"],
                 dataframe["volume"] > 0,
             ]
             dataframe.loc[reduce(lambda x, y: x & y, conditions), ["buy", "buy_tag"]] = (1, "buy_signal_3")
